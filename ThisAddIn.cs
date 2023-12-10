@@ -13,11 +13,19 @@ namespace ExcelAddIn_VSTO_Sample
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            //将以下代码添加到 ThisAddIn_Startup 事件处理程序中。 此代码通过将 CustomTaskPane 对象添加到 MyUserControl
+            //集合来创建新 CustomTaskPanes 。 代码还将显示任务窗格。
+            myUserControl1 = new MyUserControl();
+            myCustomTaskPane = this.CustomTaskPanes.Add(myUserControl1, "My Task Pane");
+            myCustomTaskPane.Visible = true;
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
         }
+
+        private MyUserControl myUserControl1;
+        private Microsoft.Office.Tools.CustomTaskPane myCustomTaskPane;
 
         #region VSTO 生成的代码
 
@@ -33,4 +41,5 @@ namespace ExcelAddIn_VSTO_Sample
         
         #endregion
     }
+
 }
