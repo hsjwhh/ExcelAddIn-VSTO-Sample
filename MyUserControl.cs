@@ -16,5 +16,10 @@ namespace ExcelAddIn_VSTO_Sample
         {
             InitializeComponent();
         }
+
+        private void btSubmit_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
