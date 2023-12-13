@@ -24,6 +24,9 @@ namespace ExcelAddIn_VSTO_Sample
         #region 选中单元格有条件格式的话就 f9 刷新计算
         /// <summary>
         /// 单元格格式 cell("ROW")=ROW(),实现单击单元格给高亮该行
+        /// 在这个示例中，`HasConditionalFormat` 方法检查给定单元格是否应用了条件格式。如果应用了条件格式，就触发 F9 操作。
+        /// 请记住，这种方法是基于检查条件格式的数量，可能并不是非常严格的验证，因为条件格式的具体设置可能会更加复杂。
+        /// 你可能需要根据你的具体需求进行更详细的条件格式检查。
         /// </summary>
         /// <param name="Sh"></param>
         /// <param name="Target"></param>
