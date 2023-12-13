@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
 using Microsoft.Office.Tools.Excel;
+using Microsoft.Office.Core;
 
 namespace ExcelAddIn_VSTO_Sample
 {
@@ -19,7 +20,47 @@ namespace ExcelAddIn_VSTO_Sample
             CustomTaskPanesAdd();
             // 添加选中单元格事件
             this.Application.SheetSelectionChange += Application_SheetSelectionChange;
+            // 添加右键菜单项目
+            AddCustomContextMenu();
         }
+
+        #region 添加右键菜单项目
+        private void AddCustomContextMenu()
+        {
+            // 单元格右键时候的弹出菜单
+            Office.CommandBar originalContextMen = Globals.ThisAddIn.Application.CommandBars["Cell"];
+            // 列出当前菜单的所有菜单项
+            foreach (CommandBarControl originalControl in originalContextMen.Controls)
+            {
+                // 如果已经存在我们自定义的菜单项
+                if (originalControl.Caption == "设置行高为25")
+                {
+                    // 1、可以退出
+                    // return;
+                    // 2、可以将之前已经存在的菜单项删除
+                    originalControl.Delete();
+                }
+            }
+            // 添加自定义菜单项到菜单第一位置
+            CommandBarControl customMenuItem = originalContextMen.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, 1, true);
+            // 转换为CommandBarButton
+            CommandBarButton customButton = (CommandBarButton)customMenuItem;
+            // 设置菜单项属性
+            customButton.Caption = "设置行高为25";
+            customButton.Tag = "SetRowHeight";
+            // cButton.FaceId = 22;
+            customButton.Click += SetRowHeightMenuItemClick;
+        }
+
+        private void SetRowHeightMenuItemClick(Office.CommandBarButton ctrl, ref bool cancelDefault)
+        {
+            // 获取当前选定的单元格
+            Excel.Range selectedRange = this.Application.Selection;
+
+            // 设置所选行的高度为25
+            selectedRange.Rows.RowHeight = 25;
+        }
+        #endregion
 
         #region 选中单元格有条件格式的话就 f9 刷新计算
         /// <summary>
