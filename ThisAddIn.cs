@@ -17,38 +17,30 @@ namespace ExcelAddIn_VSTO_Sample
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {   
             // 添加 taskpane
-            CustomTaskPanesAdd();
+            // CustomTaskPanesAdd();
             // 添加选中单元格事件
             this.Application.SheetSelectionChange += Application_SheetSelectionChange;
-            // 添加右键菜单项目
-            AddCustomContextMenu();
+            // 添加自定义右键菜单项目
+            this.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
         }
 
         #region 添加右键菜单项目
-        private void AddCustomContextMenu()
+        private void Application_SheetBeforeRightClick(object Sh, Excel.Range Target, ref bool Cancel)
         {
-            // 单元格右键时候的弹出菜单
-            Office.CommandBar originalContextMen = Globals.ThisAddIn.Application.CommandBars["Cell"];
-            // 列出当前菜单的所有菜单项
-            foreach (CommandBarControl originalControl in originalContextMen.Controls)
-            {
-                // 如果已经存在我们自定义的菜单项
-                if (originalControl.Caption == "设置行高为25")
-                {
-                    // 1、可以退出
-                    // return;
-                    // 2、可以将之前已经存在的菜单项删除
-                    originalControl.Delete();
-                }
-            }
+            // 获取右键点击的单元格
+            // Excel.Range clickedCell = Target.Cells[1, 1];
+            // 获取 CommandBars 对象
+            // 调整行高，所以右键所在行的菜单添加自定义项目
+            Office.CommandBar originalContextMen = Target.Application.CommandBars["Row"];
+            originalContextMen.Reset();
             // 添加自定义菜单项到菜单第一位置
             CommandBarControl customMenuItem = originalContextMen.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, 1, true);
             // 转换为CommandBarButton
             CommandBarButton customButton = (CommandBarButton)customMenuItem;
             // 设置菜单项属性
-            customButton.Caption = "设置行高为25";
+            customButton.Caption = "设置行高为 25";
             customButton.Tag = "SetRowHeight";
-            // cButton.FaceId = 22;
+            // customButton.FaceId = 22;
             customButton.Click += SetRowHeightMenuItemClick;
         }
 
@@ -62,7 +54,7 @@ namespace ExcelAddIn_VSTO_Sample
         }
         #endregion
 
-        #region 选中单元格有条件格式的话就 f9 刷新计算
+        #region 选中单元格有条件格式的话就 刷新计算
         /// <summary>
         /// 单元格格式 cell("ROW")=ROW(),实现单击单元格给高亮该行
         /// 在这个示例中，`HasConditionalFormat` 方法检查给定单元格是否应用了条件格式。如果应用了条件格式，就触发 F9 操作。
@@ -79,8 +71,8 @@ namespace ExcelAddIn_VSTO_Sample
             // 检查单元格是否有条件格式
             if (HasConditionalFormat(clickedCell))
             {
-                // 模拟按下 F9 键
-                clickedCell.Application.SendKeys("{F9}");
+                // 手动刷新计算
+                clickedCell.Application.Calculate();
             }
         }
 

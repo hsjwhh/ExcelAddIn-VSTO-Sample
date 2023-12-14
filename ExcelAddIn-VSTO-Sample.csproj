@@ -156,6 +156,12 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="MyRibbon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyRibbon.Designer.cs">
+      <DependentUpon>MyRibbon.cs</DependentUpon>
+    </Compile>
     <Compile Include="MyUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -165,6 +171,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="MyRibbon.resx">
+      <DependentUpon>MyRibbon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MyUserControl.resx">
       <DependentUpon>MyUserControl.cs</DependentUpon>
     </EmbeddedResource>
