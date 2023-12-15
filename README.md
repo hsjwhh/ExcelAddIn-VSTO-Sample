@@ -1,5 +1,10 @@
-﻿[![build](https://github.com/hsjwhh/ExcelAddIn-VSTO-Sample/actions/workflows/build-validation.yml/badge.svg)](https://github.com/hsjwhh/ExcelAddIn-VSTO-Sample/actions/workflows/build-validation.yml)
+﻿## Office VSTO addin 学习
 
-### office addin 学习
-
-- 添加自定义菜单（右键），UI 等
+### 实现功能：
+- **高亮选中单元格行列**
+	1. 需在所需区域设置条件格式：
+		* 公式：=OR(AND(ROW()>=sRow,ROW()<=eRow),AND(COLUMN()>=sColumn,COLUMN()<=eColumn))
+		* 底色：随意
+	2. 程序会获取选中区域的起始行、结束行、起始列和结束列来添加名称；
+	3. 条件格式启动 ：）
+- **学习添加自定义菜单项到右键菜单中**（选中行以后，添加【设置行高 25】菜单项到右键菜单，以便快速设置行高）。
