@@ -56,8 +56,8 @@ namespace ExcelAddIn_VSTO_Sample
 
         #region 选中单元格有条件格式的话就 刷新计算
         /// <summary>
-        /// 单元格格式 cell("ROW")=ROW(),实现单击单元格给高亮该行
-        /// 在这个示例中，`HasConditionalFormat` 方法检查给定单元格是否应用了条件格式。如果应用了条件格式，就触发 F9 操作。
+        /// 单元格条件格式=OR(AND(ROW()>=sRow,ROW()<=eRow),AND(COLUMN()>=sColumn,COLUMN()<=eColumn)),实现单击单元格给高亮该行
+        /// 在这个示例中，`HasConditionalFormat` 方法检查给定单元格是否应用了条件格式。如果应用了条件格式，就更新指定名称的范围。
         /// 请记住，这种方法是基于检查条件格式的数量，可能并不是非常严格的验证，因为条件格式的具体设置可能会更加复杂。
         /// 你可能需要根据你的具体需求进行更详细的条件格式检查。
         /// </summary>
@@ -65,14 +65,34 @@ namespace ExcelAddIn_VSTO_Sample
         /// <param name="Target"></param>
         private void Application_SheetSelectionChange(object Sh, Excel.Range Target)
         {
-            // 获取点击的单元格
-            Excel.Range clickedCell = Target.Cells[1, 1];
-
-            // 检查单元格是否有条件格式
-            if (HasConditionalFormat(clickedCell))
+            try
             {
-                // 手动刷新计算
-                clickedCell.Application.Calculate();
+                // 获取点击的单元格
+                Excel.Range clickedCell = Target.Cells[1, 1];
+
+                // 检查单元格是否有条件格式
+                if (HasConditionalFormat(clickedCell))
+                {
+                    // 手动刷新计算
+                    // clickedCell.Application.Calculate();
+
+                    // 获取选中区域的起始行、结束行、起始列和结束列
+                    int startRow = Target.Row;
+                    int endRow = Target.Cells[Target.Cells.Count].Row;
+                    int startColumn = Target.Column;
+                    int endColumn = Target.Cells[Target.Cells.Count].Column;
+
+                    // 在 ActiveWorkbook 中添加名称
+                    AddName("sRow", startRow);
+                    AddName("eRow", endRow);
+                    AddName("sColumn", startColumn);
+                    AddName("eColumn", endColumn);
+                }
+            }
+            catch (Exception ex)
+            {
+                // 处理异常，可以根据实际情况进行处理
+                // 例如，记录日志或显示错误消息
             }
         }
 
@@ -83,6 +103,17 @@ namespace ExcelAddIn_VSTO_Sample
 
             // 检查是否有条件格式
             return (conditions != null && conditions.Count > 0);
+        }
+
+        // 添加名称
+        private void AddName(string name, int refersTo)
+        {
+            Excel.Workbook activeWorkbook = Globals.ThisAddIn.Application.ActiveWorkbook;
+
+            if (activeWorkbook != null)
+            {
+                activeWorkbook.Names.Add(name, refersTo);
+            }
         }
         #endregion
 
