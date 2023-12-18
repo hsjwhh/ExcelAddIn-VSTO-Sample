@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,9 +100,19 @@ namespace ExcelAddIn_VSTO_Sample
         {
             // 获取单元格的条件格式
             Excel.FormatConditions conditions = cell.FormatConditions;
-
-            // 检查是否有条件格式
-            return (conditions != null && conditions.Count > 0);
+            
+            if (conditions != null & conditions.Count > 0)
+            {
+                foreach (Excel.FormatCondition condition in conditions)
+                {
+                    // 检查是否有指定条件格式
+                    if (condition.Type == 2 & condition.Formula1 == "=AND(ROW()>=sRow,ROW()<=eRow)")
+                    {
+                        return true;
+                    }
+                }
+            }           
+            return false;
         }
 
         // 添加名称
