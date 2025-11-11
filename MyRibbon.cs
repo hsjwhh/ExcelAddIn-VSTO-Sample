@@ -10,7 +10,14 @@ namespace ExcelAddIn_VSTO_Sample
     {
         private void MyRibbon_Load(object sender, RibbonUIEventArgs e)
         {
+            spotlightToggleButton.Checked = Properties.Settings.Default.SpotlightEnabled;
+        }
 
+        private void spotlightToggleButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            Globals.ThisAddIn.ToggleSpotlight();
+            // 同步按钮状态
+            spotlightToggleButton.Checked = Properties.Settings.Default.SpotlightEnabled;
         }
     }
 }

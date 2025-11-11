@@ -37,6 +37,7 @@
             this.tabToolBox = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
             this.btClose = this.Factory.CreateRibbonButton();
+            this.spotlightToggleButton = this.Factory.CreateRibbonToggleButton();
             this.tabToolBox.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -50,13 +51,21 @@
             // group1
             // 
             this.group1.Items.Add(this.btClose);
-            this.group1.Label = "自定义格式";
+            this.group1.Items.Add(this.spotlightToggleButton);
+            this.group1.Label = "自用";
             this.group1.Name = "group1";
             // 
             // btClose
             // 
             this.btClose.Label = "自定义按钮";
             this.btClose.Name = "btClose";
+            this.btClose.Visible = false;
+            // 
+            // spotlightToggleButton
+            // 
+            this.spotlightToggleButton.Label = "聚光灯";
+            this.spotlightToggleButton.Name = "spotlightToggleButton";
+            this.spotlightToggleButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.spotlightToggleButton_Click);
             // 
             // MyRibbon
             // 
@@ -77,6 +86,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tabToolBox;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btClose;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton spotlightToggleButton;
     }
 
     partial class ThisRibbonCollection

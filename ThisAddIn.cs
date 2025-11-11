@@ -12,16 +12,24 @@ namespace ExcelAddIn_VSTO_Sample
 {
     public partial class ThisAddIn
     {
+        private bool spotlightEnable;
         private MyUserControl myUserControl1;
         private Microsoft.Office.Tools.CustomTaskPane myCustomTaskPane;
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
-        {   
+        {
             // 添加 taskpane
             // CustomTaskPanesAdd();
-            // 添加选中单元格事件
-            this.Application.SheetSelectionChange += Application_SheetSelectionChange;
+            // 读取上次保存的状态
+            spotlightEnable = Properties.Settings.Default.SpotlightEnabled;
+            if (spotlightEnable)
+            {
+                // 添加选中单元格事件
+                this.Application.SheetSelectionChange += Application_SheetSelectionChange;
+            }
+            
             // 添加自定义右键菜单项目
             this.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
+
         }
 
         #region 添加右键菜单项目
@@ -106,7 +114,7 @@ namespace ExcelAddIn_VSTO_Sample
                 foreach (Excel.FormatCondition condition in conditions)
                 {
                     // 检查是否有指定条件格式
-                    if (condition.Type == 2 & condition.Formula1 == "=AND(ROW()>=sRow,ROW()<=eRow)")
+                    if (condition.Type == 2 & condition.Formula1 == "=OR(CELL(\"row\")=ROW(),CELL(\"col\")=COLUMN())")
                     {
                         return true;
                     }
@@ -126,7 +134,7 @@ namespace ExcelAddIn_VSTO_Sample
             }
         }
         #endregion
-
+        
         private void CustomTaskPanesAdd()
         {
             //将以下代码添加到 ThisAddIn_Startup 事件处理程序中。 此代码通过将 CustomTaskPane 对象添加到 MyUserControl
@@ -136,10 +144,28 @@ namespace ExcelAddIn_VSTO_Sample
             myCustomTaskPane.Visible = true;
         }
 
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        public void ToggleSpotlight()
         {
+            spotlightEnable = !spotlightEnable;
+            if (spotlightEnable)
+            {
+                this.Application.SheetSelectionChange += Application_SheetSelectionChange;
+            }
+            else
+            { 
+                this.Application.SheetSelectionChange -= Application_SheetSelectionChange;
+            }
         }
 
+        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+            // 退出时保存 聚光灯 开关状态
+            Properties.Settings.Default.SpotlightEnabled = spotlightEnable;
+            Properties.Settings.Default.Save();
+        }
+
+        
+       
         
 
         #region VSTO 生成的代码
