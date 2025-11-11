@@ -37,7 +37,7 @@
             this.tabToolBox = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
             this.btClose = this.Factory.CreateRibbonButton();
-            this.spotlightToggleButton = this.Factory.CreateRibbonToggleButton();
+            this.spotlightCheckBox = this.Factory.CreateRibbonCheckBox();
             this.tabToolBox.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +51,7 @@
             // group1
             // 
             this.group1.Items.Add(this.btClose);
-            this.group1.Items.Add(this.spotlightToggleButton);
+            this.group1.Items.Add(this.spotlightCheckBox);
             this.group1.Label = "自用";
             this.group1.Name = "group1";
             // 
@@ -61,11 +61,11 @@
             this.btClose.Name = "btClose";
             this.btClose.Visible = false;
             // 
-            // spotlightToggleButton
+            // spotlightCheckBox
             // 
-            this.spotlightToggleButton.Label = "聚光灯";
-            this.spotlightToggleButton.Name = "spotlightToggleButton";
-            this.spotlightToggleButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.spotlightToggleButton_Click);
+            this.spotlightCheckBox.Label = "开启聚光灯";
+            this.spotlightCheckBox.Name = "spotlightCheckBox";
+            this.spotlightCheckBox.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.spotlightCheckBox_Click);
             // 
             // MyRibbon
             // 
@@ -86,7 +86,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tabToolBox;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btClose;
-        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton spotlightToggleButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonCheckBox spotlightCheckBox;
     }
 
     partial class ThisRibbonCollection
