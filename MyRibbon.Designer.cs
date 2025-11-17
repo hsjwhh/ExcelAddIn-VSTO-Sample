@@ -65,6 +65,7 @@
             // 
             this.spotlightCheckBox.Label = "开启聚光灯";
             this.spotlightCheckBox.Name = "spotlightCheckBox";
+            this.spotlightCheckBox.Visible = false;
             this.spotlightCheckBox.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.spotlightCheckBox_Click);
             // 
             // MyRibbon
