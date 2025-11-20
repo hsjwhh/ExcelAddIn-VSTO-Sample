@@ -12,7 +12,8 @@ namespace ExcelAddIn_VSTO_Sample
 {
     public partial class ThisAddIn
     {
-        private bool spotlightEnable;
+
+        public bool spotlightEnable = false;
         private MyUserControl myUserControl1;
         private Microsoft.Office.Tools.CustomTaskPane myCustomTaskPane;
         // 新增字段 spotlightButton、spotlightListButton、rowButton 用于存储右键菜单按钮的引用及绑定状态
@@ -35,162 +36,13 @@ namespace ExcelAddIn_VSTO_Sample
             }
             
             // 添加自定义右键菜单项目
-            this.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
+            //this.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
 
-        }
-
-        // 添加自定义菜单项目
-        private Office.CommandBarButton AddContextMenuItem(
-            string menuName,
-            string tag,
-            string caption,
-            bool handlerattached,
-            Office._CommandBarButtonEvents_ClickEventHandler handler)
-        {
-            Office.CommandBar menu = null;
-            try
-            {
-                menu = Globals.ThisAddIn.Application.CommandBars[menuName];
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Menu '{menuName}' not found: {ex.Message}");
-                return null;
-            }
-
-            if (menu == null) return null;
-
-            Office.CommandBarButton button = null;
-
-            // 查找是否已存在
-            foreach (Office.CommandBarControl ctrl in menu.Controls)
-            {
-                try
-                {
-                    if (ctrl != null && ctrl.Tag == tag)
-                    {
-                        button = ctrl as Office.CommandBarButton;
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Error checking control tag: {ex.Message}");
-                }
-            }
-
-            // 如果不存在则创建
-            if (button == null)
-            {
-                var created = menu.Controls.Add(
-                    MsoControlType.msoControlButton,
-                    Type.Missing,
-                    Type.Missing,
-                    menu.Controls.Count + 1,
-                    true);
-
-                button = (Office.CommandBarButton)created;
-                button.Tag = tag;
-                button.Caption = caption;
-            }
-            else
-            {
-                // 已存在时可选择更新 Caption
-                if (!string.IsNullOrEmpty(caption))
-                    button.Caption = caption;
-            }
-
-            // 绑定事件（避免重复绑定）
-            try
-            {
-                if (!handlerattached)
-                {
-                    button.Click -= handler;
-                    button.Click += handler;
-                    if (tag == "ToggleSpotlight") spotlightHandlerAttached = true;
-                    if (tag == "ToggleListSpotlight") spotlightListHandlerAttached = true;
-                    if (tag == "SetRowHeight") rowHandlerAttached = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error binding event for {tag}: {ex.Message}");
-            }
-
-            // 保存引用（可选）
-            if (tag == "ToggleSpotlight") spotlightButton = button;
-            if (tag == "ToggleListSpotlight") spotlightListButton = button;
-            if (tag == "SetRowHeight") rowButton = button;
-
-            return button;
-        }
-
-        // 移除自定义菜单项
-        private void RemoveContextMenuItem(string menuName, string tag)
-        {
-            Office.CommandBar menu = null;
-            try
-            {
-                menu = Globals.ThisAddIn.Application.CommandBars[menuName];
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Menu '{menuName}' not found: {ex.Message}");
-                return;
-            }
-
-            if (menu == null) return;
-
-            try
-            {
-                for (int i = 1; i <= menu.Controls.Count; i++)
-                {
-                    var ctrl = menu.Controls[i];
-                    if (ctrl != null && ctrl.Tag == tag)
-                    {
-                        ctrl.Delete();
-                        System.Diagnostics.Debug.WriteLine($"Removed context menu item '{tag}' from '{menuName}'");
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error removing item '{tag}' from '{menuName}': {ex.Message}");
-            }
         }
 
 
         #region 添加右键菜单项目
-        private void Application_SheetBeforeRightClick(object Sh, Excel.Range Target, ref bool Cancel)
-        {
-            try
-            {
-                // --- 单元格菜单：聚光灯开关（查找已存在控件或创建，并确保事件只绑定一次） ---
-                string caption = spotlightEnable ? "聚光灯：已开启" : "聚光灯：已关闭";
-                if (Target.Columns.Count == Target.Worksheet.Columns.Count)
-                {
-                    // 调整行高，所以右键所在行的菜单添加自定义项目
-                    // 说明选中的是整行（点击了行号区域）
-                    AddContextMenuItem("Row", "SetRowHeight", "设置行高为 25", rowHandlerAttached, SetRowHeightMenuItemClick);
-                }
-                else if (Target.ListObject != null)
-                {
-                    // 表格中的单元格
-                    AddContextMenuItem("List Range Popup", "ToggleListSpotlight", caption, spotlightListHandlerAttached, ToggleSpotlightMenuItemClick);
-                }
-                else
-                {
-                    // 普通的单元格
-                    AddContextMenuItem("Cell", "ToggleSpotlight", caption, spotlightHandlerAttached, ToggleSpotlightMenuItemClick);
-                }
-            }
-            catch
-            {
-                // 忽略右键菜单修改失败，避免影响 Excel
-            }
-         
-        }
+
 
         private void ToggleSpotlightMenuItemClick(Office.CommandBarButton ctrl, ref bool cancelDefault)
         {
@@ -306,21 +158,59 @@ namespace ExcelAddIn_VSTO_Sample
             spotlightEnable = !spotlightEnable;
             if (spotlightEnable)
             {
-                this.Application.SheetSelectionChange += Application_SheetSelectionChange;
+                // 启用时订阅（如果你的原来实现是这样）
+                try { this.Application.SheetSelectionChange += Application_SheetSelectionChange; } catch { }
             }
             else
-            { 
-                this.Application.SheetSelectionChange -= Application_SheetSelectionChange;
+            {
+                try { this.Application.SheetSelectionChange -= Application_SheetSelectionChange; } catch { }
             }
         }
 
+        // 2) 提供给 Ribbon 显示标签的字符串
+        public string GetSpotlightCaption()
+        {
+            return spotlightEnable ? "聚光灯：已开启" : "聚光灯：已关闭";
+        }
+
+        // 3) 提供给 Ribbon 获取当前状态（toggle 的 getPressed）
+        public bool IsSpotlightEnabled()
+        {
+            return spotlightEnable;
+        }
+
+        // 4) 设置选中行高（被 ContextMenu 调用）
+        public void SetSelectionRowHeight(double height)
+        {
+            try
+            {
+                var sel = this.Application.Selection as Microsoft.Office.Interop.Excel.Range;
+                if (sel != null)
+                    sel.Rows.RowHeight = height;
+            }
+            catch { /* 忽略 */ }
+        }
+
+        // 5) 你的自定义按钮回调（可选）
+        public void OnCustomButtonClicked()
+        {
+            System.Windows.Forms.MessageBox.Show("自定义按钮被点击（来自 AggregatorRibbon）");
+        }
+
+        protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
+        {
+            // 请把下面的资源名替换成你项目实际的嵌入资源完整名称（见下方说明如何确定）
+            var resourceNames = new[]
+            {
+                "ExcelAddIn_VSTO_Sample.DesignerRibbon.xml",   // DesignerRibbon.xml 的嵌入资源名（示例）
+                "ExcelAddIn_VSTO_Sample.ContextMenus.xml"     // ContextMenus.xml 的嵌入资源名（示例）
+            };
+            return new AggregatorRibbon(resourceNames);
+        }
+
+
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            // 在关闭时做清理
-            RemoveContextMenuItem("Row", "SetRowHeight");
-            RemoveContextMenuItem("List Range Popup", "ToggleListSpotlight");
-            RemoveContextMenuItem("Cell", "ToggleSpotlight");
-
             // 退出时保存 聚光灯 开关状态（保留原有行为）
             Properties.Settings.Default.SpotlightEnabled = spotlightEnable;
             Properties.Settings.Default.Save();
