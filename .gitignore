@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.vscode
+/CellContextMenu.cs
+/CellContextMenu.xml
+/RibbonAggregator.cs
