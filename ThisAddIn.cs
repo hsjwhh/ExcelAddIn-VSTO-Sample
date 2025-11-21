@@ -29,41 +29,7 @@ namespace ExcelAddIn_VSTO_Sample
                 this.Application.SheetSelectionChange += Application_SheetSelectionChange;
             }
             
-            // 添加自定义右键菜单项目
-            //this.Application.SheetBeforeRightClick += Application_SheetBeforeRightClick;
-
         }
-
-
-        #region 添加右键菜单项目
-
-
-        private void ToggleSpotlightMenuItemClick(Office.CommandBarButton ctrl, ref bool cancelDefault)
-        {
-            try
-            {
-                // 切换状态（你已有的方法）
-                ToggleSpotlight();
-
-                // 更新菜单显示文本（当前上下文的菜单按钮实例）
-                try
-                {
-                    ctrl.Caption = spotlightEnable ? "聚光灯：已开启" : "聚光灯：已关闭";
-                }
-                catch { }
-            }
-            catch { }
-        }
-
-        private void SetRowHeightMenuItemClick(Office.CommandBarButton ctrl, ref bool cancelDefault)
-        {
-            // 获取当前选定的单元格
-            Excel.Range selectedRange = this.Application.Selection;
-
-            // 设置所选行的高度为25
-            selectedRange.Rows.RowHeight = 25;
-        }
-        #endregion
 
         #region 选中单元格有条件格式的话就 刷新计算
         /// <summary>

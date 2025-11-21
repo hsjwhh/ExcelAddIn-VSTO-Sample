@@ -33,7 +33,7 @@
     <PublishUrl>Z:\04 Tools\Office\</PublishUrl>
     <InstallUrl />
     <TargetCulture>zh-chs</TargetCulture>
-    <ApplicationVersion>1.0.0.4</ApplicationVersion>
+    <ApplicationVersion>1.0.0.5</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
@@ -239,7 +239,7 @@
     <ManifestKeyFile>ExcelAddIn-VSTO-Sample_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>48019CC1EB5E3A6064EB94EC91A938BF809192B1</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>D1E98106DF2ECC55F7FA55150E82B0B5EC82BA55</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
