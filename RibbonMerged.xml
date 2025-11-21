@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+
+	<!-- ========== Ribbon (原 Designer 中的 Tab) ========== -->
+	<ribbon>
+		<tabs>
+			<tab id="tabToolBox" label="工具箱">
+				<group id="group1" label="自用">
+
+					<!-- 原 Designer 的按钮（可选） -->
+					<button id="btClose"
+							label="自定义按钮"
+							onAction="OnCustomButtonClick"
+							getVisible="GetBtCloseVisible"/>
+
+					<!-- 聚光灯按钮 -->
+					<toggleButton id="spotlightToggle"
+								  label="开启聚光灯"
+								  onAction="OnToggleSpotlight"
+								  getPressed="GetSpotlightPressed"
+								  getVisible="GetSpotlightVisible"/>
+				</group>
+			</tab>
+		</tabs>
+	</ribbon>
+
+	<!-- ========== Context Menu（右键菜单） ========== -->
+	<contextMenus>
+
+		<!-- 单元格右键菜单 -->
+		<contextMenu idMso="ContextMenuCell">
+			<button id="btnToggleSpotlightCell"
+					getLabel="GetSpotlightLabel"
+					onAction="OnToggleSpotlightFromContext"/>
+		</contextMenu>
+
+		<!-- 区域右键菜单 -->
+		<contextMenu idMso="ContextMenuListRange">
+			<button id="btnToggleSpotlightList"
+					getLabel="GetSpotlightLabel"
+					onAction="OnToggleSpotlightFromContext"/>
+		</contextMenu>
+
+		<!-- 行标题右键菜单 -->
+		<contextMenu idMso="ContextMenuRow">
+			<button id="btnSetRowHeight"
+					label="设置行高为 25"
+					onAction="OnSetRowHeight"/>
+		</contextMenu>
+
+	</contextMenus>
+
+</customUI>

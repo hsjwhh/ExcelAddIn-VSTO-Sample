@@ -16,13 +16,7 @@ namespace ExcelAddIn_VSTO_Sample
         public bool spotlightEnable = false;
         private MyUserControl myUserControl1;
         private Microsoft.Office.Tools.CustomTaskPane myCustomTaskPane;
-        // 新增字段 spotlightButton、spotlightListButton、rowButton 用于存储右键菜单按钮的引用及绑定状态
-        private Office.CommandBarButton spotlightButton;
-        private Office.CommandBarButton spotlightListButton;
-        private bool spotlightHandlerAttached = false;
-        private bool spotlightListHandlerAttached = false;
-        private Office.CommandBarButton rowButton;
-        private bool rowHandlerAttached = false;
+
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             // 添加 taskpane
@@ -197,17 +191,10 @@ namespace ExcelAddIn_VSTO_Sample
             System.Windows.Forms.MessageBox.Show("自定义按钮被点击（来自 AggregatorRibbon）");
         }
 
-        protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
+        protected override IRibbonExtensibility CreateRibbonExtensibilityObject()
         {
-            // 请把下面的资源名替换成你项目实际的嵌入资源完整名称（见下方说明如何确定）
-            var resourceNames = new[]
-            {
-                "ExcelAddIn_VSTO_Sample.DesignerRibbon.xml",   // DesignerRibbon.xml 的嵌入资源名（示例）
-                "ExcelAddIn_VSTO_Sample.ContextMenus.xml"     // ContextMenus.xml 的嵌入资源名（示例）
-            };
-            return new AggregatorRibbon(resourceNames);
+            return new SingleResourceRibbon("ExcelAddIn_VSTO_Sample.RibbonMerged.xml");
         }
-
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
