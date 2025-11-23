@@ -72,7 +72,7 @@ public class SingleResourceRibbon : IRibbonExtensibility
     public bool GetBtCloseVisible(IRibbonControl control) => false;
 
     // getVisible 回调（控制 spotlight toggle 是否可见）
-    public bool GetSpotlightVisible(IRibbonControl control) => true;
+    public bool GetSpotlightVisible(IRibbonControl control) => false;
 
     // toggleButton 的 onAction（注意签名：(IRibbonControl, bool pressed)）
     // 当用户通过 Ribbon 上的 toggle 切换时调用
